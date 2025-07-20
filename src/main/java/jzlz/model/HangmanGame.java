@@ -1,6 +1,7 @@
 package jzlz.model;
 
 import jzlz.exception.GameIsFinishedException;
+import jzlz.exception.LetterAlreadyInputtedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,10 @@ public class HangmanGame {
         this.hangmanInitialSize = hangman.length();
     }
 
+    public HangmanGameStatus getHangmanGameStatus() {
+        return hangmanGameStatus;
+    }
+
     public void inputCharacter(final char character){
         if (this.hangmanGameStatus != PENDING){
             var message = this.hangmanGameStatus == WIN ?
@@ -44,6 +49,10 @@ public class HangmanGame {
                 .filter(c -> c.getCharacter() == character)
                 .toList();
 
+        if (this.failAttempts.contains(character)){
+            throw new LetterAlreadyInputtedException(" A letra "+ character +" já foi informada anteriormente.");
+        }
+
         if (found.isEmpty()){
             failAttempts.add(character);
             if (failAttempts.size() >= 6 ){
@@ -51,6 +60,10 @@ public class HangmanGame {
             }
             rebuildHangman(this.hangmanPaths.removeFirst());
             return;
+        }
+
+        if (found.getFirst().isVisible()){
+            throw new LetterAlreadyInputtedException(" A letra "+ character +" já foi informada anteriormente.");
         }
 
         this.characters.forEach( c -> {
@@ -75,12 +88,12 @@ public class HangmanGame {
         final var LEGS_LINE = 5;
         return new ArrayList<>(
                 List.of(
-                        new HangmanChar('O',this.lineSize * HEAD_LINE + 6),
-                        new HangmanChar('|',this.lineSize * BODY_LINE + 6),
-                        new HangmanChar('/',this.lineSize * BODY_LINE + 5),
-                        new HangmanChar('\\',this.lineSize * BODY_LINE + 7),
-                        new HangmanChar('/',this.lineSize * LEGS_LINE + 5),
-                        new HangmanChar('\\',this.lineSize * LEGS_LINE + 7)
+                        new HangmanChar('O',this.lineSize * HEAD_LINE + 9),
+                        new HangmanChar('|',this.lineSize * BODY_LINE + 10),
+                        new HangmanChar('/',this.lineSize * BODY_LINE + 9),
+                        new HangmanChar('\\',this.lineSize * BODY_LINE + 11),
+                        new HangmanChar('/',this.lineSize * LEGS_LINE + 11),
+                        new HangmanChar('\\',this.lineSize * LEGS_LINE + 12)
                 )
         );
     }
@@ -103,7 +116,7 @@ public class HangmanGame {
     }
 
     private void buildHangmanDesign (final String whiteSpaces, final String characterSpaces){
-        this.hangman = "  _____  " + whiteSpaces + System.lineSeparator() +
+        this.hangman ="  _____  " + whiteSpaces + System.lineSeparator() +
                       "  |   |  " + whiteSpaces + System.lineSeparator() +
                       "  |   |  " + whiteSpaces + System.lineSeparator() +
                       "  |      " + whiteSpaces + System.lineSeparator() +

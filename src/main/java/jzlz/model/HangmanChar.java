@@ -32,7 +32,7 @@ public class HangmanChar {
     }
 
     public void enableVisibility() {
-        isVisible = visible;
+        isVisible = true;
     }
 
     public int getPosition() {
