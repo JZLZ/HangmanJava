@@ -14,7 +14,7 @@ Este projeto é parte do desafio da DIO para praticar Programação Orientada a 
 
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/seu-usuario/hangman-java.git
+   git clone https://github.com/JZLZ/HangmanJava.git
    cd hangman-java
 
 ![img.png](img.png)
